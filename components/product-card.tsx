@@ -4,10 +4,20 @@ import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Product } from "@/lib/types";
+
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-export const ProductCard = () => {
+type ProductCardProps = Product;
+
+export const ProductCard = ({
+  id,
+  title,
+  price,
+  image,
+  characteristics,
+}: ProductCardProps) => {
   return (
     <Link
       href="#"
@@ -29,31 +39,33 @@ export const ProductCard = () => {
       </Tooltip>
       <div className="relative w-full">
         <div className="flex flex-wrap items-start absolute z-1 top-3 left-3"></div>
-        <div className="flex justify-center items-center w-fit text-orange bg-secondary-orange text-primary-orange text-xs leading-4 h-5 px-2 rounded-[6px] bottom-3 left-3 absolute z-1">
-          По рецепту
-        </div>
+        {characteristics.isByPrescription === "По рецепту" && (
+          <div className="flex justify-center items-center w-fit text-orange bg-secondary-orange text-primary-orange text-xs leading-4 h-5 px-2 rounded-[6px] bottom-3 left-3 absolute z-1">
+            По рецепту
+          </div>
+        )}
         <div className="flex relative z-0 w-full pt-[100%] overflow-hidden rounded-2xl">
           <Image
             className="w-full h-full absolute top-0 left-0"
             loading="lazy"
             width={215}
             height={215}
-            src="https://placehold.co/215x215/png"
-            alt="Test"
+            src={image}
+            alt={title}
           />
         </div>
       </div>
       <div className="p-3 flex flex-col flex-1">
         <div className="flex items-baseline mb-3">
           <div className="h-[1.3em] font-bold leading-[130%] mr-1 xl:text-[16px] text-[14px] text-black">
-            2.01 p
+            {price} p
           </div>
         </div>
         <div className="mb-3 h-13.5 hyphens-auto wrap-break-word text-sm leading-4.5 text-black line-clamp-3">
-          Тетрациклин-Белмед 100 мг таблетки покрытые пленочной оболочкой 20 шт
+          {title}
         </div>
         <div className="mb-3 text-xs leading-4 text-primary-gray line-clamp-1">
-          Белмедпрепараты РУП, Беларусь
+          {characteristics.manufacturer}, {characteristics.country}
         </div>
         <Button>В корзину</Button>
       </div>
