@@ -1,6 +1,6 @@
-import { Characteristic } from "@/lib/types";
+import { FilterKey, SortOption } from "@/lib/types";
 
-export const filterLabels: Record<keyof Characteristic, string> = {
+export const filterLabels: Record<FilterKey, string> = {
   country: "Страна производства",
   brand: "Бренд",
   dossage: "Дозировка",
@@ -10,4 +10,10 @@ export const filterLabels: Record<keyof Characteristic, string> = {
   expirationDate: "Срок годности",
   isByPrescription: "Требуется ли рецепт",
   manufacturer: "Производитель",
+};
+
+export const sortOptionLabels: Record<SortOption, string> = {
+  relevance: "По релевантности",
+  "price-asc": "Сначала дешевые",
+  "price-desc": "Сначала дорогие",
 };

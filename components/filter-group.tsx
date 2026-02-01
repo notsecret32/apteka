@@ -1,5 +1,8 @@
 import { ChevronDown } from "lucide-react";
 
+import { FilterKey } from "@/lib/types";
+import { filterLabels } from "@/constants/labels";
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -9,8 +12,6 @@ import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Checkbox } from "./ui/checkbox";
 import { FilterButton } from "./filter-button";
 import { Label } from "./ui/label";
-import { filterLabels } from "@/constants/filters";
-import { FilterKey } from "@/lib/types";
 
 interface FilterGroupProps {
   option: FilterKey;

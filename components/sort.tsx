@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useQueryState } from "nuqs";
 
 import {
   Select,
@@ -11,19 +11,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SortOption } from "@/lib/types";
-
-const sortOptions: Record<SortOption, string> = {
-  relevance: "По релевантности",
-  "price-asc": "Сначала дешевые",
-  "price-desc": "Сначала дорогие",
-};
+import { sortOptionParser } from "@/lib/params";
+import { sortOptionLabels } from "@/constants/labels";
 
 interface SortProps {
   onValueChange?: (value: string) => void;
 }
 
 export const Sort = ({ onValueChange }: SortProps) => {
-  const [sortOption, setSortOption] = useState<SortOption>("relevance");
+  const [sortOption, setSortOption] = useQueryState(
+    "sort",
+    sortOptionParser.withDefault("relevance"),
+  );
 
   const handleChange = (value: string) => {
     setSortOption(value as SortOption);
@@ -37,7 +36,7 @@ export const Sort = ({ onValueChange }: SortProps) => {
       </SelectTrigger>
       <SelectContent position="popper">
         <SelectGroup>
-          {Object.entries(sortOptions).map(([key, value]) => (
+          {Object.entries(sortOptionLabels).map(([key, value]) => (
             <SelectItem key={key} value={key}>
               {value}
             </SelectItem>

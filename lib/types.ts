@@ -1,4 +1,8 @@
-export type SortOption = "relevance" | "price-asc" | "price-desc";
+import { inferParserType } from "nuqs";
+
+import { sortOptionParser } from "./params";
+
+export type SortOption = NonNullable<inferParserType<typeof sortOptionParser>>;
 
 export type Characteristic = {
   country: string;
