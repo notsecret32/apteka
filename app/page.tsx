@@ -4,7 +4,14 @@ import { ProductList } from "@/components/product-list";
 import { Sort } from "@/components/sort";
 import { getFilters } from "@/lib/utils";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  console.log("home", params);
+
   const products = await getProducts();
 
   if (!products) {
