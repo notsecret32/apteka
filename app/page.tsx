@@ -6,6 +6,11 @@ import { getFilters } from "@/lib/utils";
 
 export default async function Home() {
   const data = await fetch("http://localhost:9080/api/products");
+
+  if (!data.ok) {
+    return new Error("Произошла ошибка при попытке получить данные :(");
+  }
+
   const products = (await data.json()) as Product[];
 
   const filters = getFilters(products);
