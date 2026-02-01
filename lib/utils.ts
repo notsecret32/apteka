@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { FilterOptions, Product } from "./types";
+import { FilterOptions, Product, SortOption } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,4 +25,19 @@ export function getFilters(products: Product[]): FilterOptions {
   });
 
   return result as FilterOptions;
+}
+
+export function sortProducts(
+  products: Product[],
+  option: SortOption,
+): Product[] {
+  if (option === "price-asc") {
+    return products.sort((a, b) => a.price - b.price);
+  }
+
+  if (option === "price-desc") {
+    return products.sort((a, b) => b.price - a.price);
+  }
+
+  return products;
 }

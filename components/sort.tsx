@@ -11,12 +11,9 @@ import {
 import { sortOptionLabels } from "@/constants/labels";
 import { useSort } from "@/hooks/use-sort";
 import { SortOption } from "@/lib/types";
-import { useEffect } from "react";
 
 export const Sort = () => {
   const [{ sort }, setSort] = useSort();
-
-  useEffect(() => console.log({ sort }), [sort]);
 
   return (
     <Select
