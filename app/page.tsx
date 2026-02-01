@@ -1,8 +1,15 @@
 import { Filters } from "@/components/filters";
 import { ProductList } from "@/components/product-list";
 import { Sort } from "@/components/sort";
+import { Product } from "@/lib/types";
+import { getFilters } from "@/lib/utils";
 
-export default function Home() {
+export default async function Home() {
+  const data = await fetch("http://localhost:9080/api/products");
+  const products = (await data.json()) as Product[];
+
+  const filters = getFilters(products);
+
   return (
     <main className="flex-1 xl:mb-8 mb-6 mt-4">
       <div className="mx-auto w-full py-0 max-w-full xxl:max-w-[1490px] xl:px-10 px-4">
@@ -10,7 +17,7 @@ export default function Home() {
           <Sort />
         </div>
         <div className="grid w-full grid-cols-1 gap-4 xl:grid-cols-[270px_1fr]">
-          <Filters />
+          <Filters filters={filters} />
           <div className="max-xl:-mx-4">
             <ProductList />
           </div>
