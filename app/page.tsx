@@ -1,17 +1,15 @@
+import { getProducts } from "@/api/products";
 import { Filters } from "@/components/filters";
 import { ProductList } from "@/components/product-list";
 import { Sort } from "@/components/sort";
-import { Product } from "@/lib/types";
 import { getFilters } from "@/lib/utils";
 
 export default async function Home() {
-  const data = await fetch("http://localhost:9080/api/products");
+  const products = await getProducts();
 
-  if (!data.ok) {
+  if (!products) {
     return new Error("Произошла ошибка при попытке получить данные :(");
   }
-
-  const products = (await data.json()) as Product[];
 
   const filters = getFilters(products);
 
