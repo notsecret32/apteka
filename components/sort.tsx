@@ -1,7 +1,5 @@
 "use client";
 
-import { useQueryState } from "nuqs";
-
 import {
   Select,
   SelectContent,
@@ -10,27 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SortOption } from "@/lib/types";
-import { sortOptionParser } from "@/lib/params";
 import { sortOptionLabels } from "@/constants/labels";
+import { useSort } from "@/hooks/use-sort";
+import { SortOption } from "@/lib/types";
+import { useEffect } from "react";
 
-interface SortProps {
-  onValueChange?: (value: string) => void;
-}
+export const Sort = () => {
+  const [{ sort }, setSort] = useSort();
 
-export const Sort = ({ onValueChange }: SortProps) => {
-  const [sortOption, setSortOption] = useQueryState(
-    "sort",
-    sortOptionParser.withDefault("relevance"),
-  );
-
-  const handleChange = (value: string) => {
-    setSortOption(value as SortOption);
-    onValueChange?.(value);
-  };
+  useEffect(() => console.log({ sort }), [sort]);
 
   return (
-    <Select value={sortOption} onValueChange={handleChange}>
+    <Select
+      value={sort}
+      onValueChange={(e) => setSort({ sort: e as SortOption })}
+    >
       <SelectTrigger className="w-full max-w-48 bg-white">
         <SelectValue />
       </SelectTrigger>
