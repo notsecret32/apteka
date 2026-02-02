@@ -1,4 +1,4 @@
-import { parseAsStringLiteral } from "nuqs";
+import { createMultiParser, parseAsStringLiteral } from "nuqs";
 
 const sortOptionsArray = ["relevance", "price-asc", "price-desc"] as const;
 

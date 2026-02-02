@@ -1,22 +1,22 @@
-import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";
+import { useQueryStates } from "nuqs";
 
 export const useFilter = () => {
-  return useQueryStates(
-    {
-      brand: parseAsArrayOf(parseAsString).withDefault([]),
-      country: parseAsArrayOf(parseAsString).withDefault([]),
-      dossage: parseAsArrayOf(parseAsString).withDefault([]),
-      releaseForm: parseAsArrayOf(parseAsString).withDefault([]),
-      storageTemperature: parseAsArrayOf(parseAsString).withDefault([]),
-      quantityPerPackage: parseAsArrayOf(parseAsString).withDefault([]),
-      expirationDate: parseAsArrayOf(parseAsString).withDefault([]),
-      isByPrescription: parseAsArrayOf(parseAsString).withDefault([]),
-      manufacturer: parseAsArrayOf(parseAsString).withDefault([]),
-    },
-    {
-      history: "push",
-      clearOnDefault: true,
-      shallow: false,
-    },
-  );
+  // return useQueryStates(
+  //   {
+  //     brand: parseAsFilter().withDefault({}),
+  //     country: parseAsFilter().withDefault({}),
+  //     dossage: parseAsFilter().withDefault({}),
+  //     releaseForm: parseAsFilter().withDefault({}),
+  //     storageTemperature: parseAsFilter().withDefault({}),
+  //     quantityPerPackage: parseAsFilter().withDefault({}),
+  //     expirationDate: parseAsFilter().withDefault({}),
+  //     isByPrescription: parseAsFilter().withDefault({}),
+  //     manufacturer: parseAsFilter().withDefault({}),
+  //   },
+  //   {
+  //     history: "push",
+  //     clearOnDefault: true,
+  //     shallow: false,
+  //   },
+  // );
 };

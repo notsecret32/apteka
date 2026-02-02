@@ -2,9 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 
-import { FilterKey } from "@/lib/types";
 import { filterLabels } from "@/constants/labels";
-import { useFilter } from "@/hooks/use-filter";
 
 import {
   Collapsible,
@@ -17,30 +15,30 @@ import { FilterButton } from "./filter-button";
 import { Label } from "./ui/label";
 
 interface FilterGroupProps {
-  option: FilterKey;
+  option: string;
   values: string[];
 }
 
 export const FilterGroup = ({ option, values }: FilterGroupProps) => {
-  const [query, setQuery] = useFilter();
+  // const [query, setQuery] = useFilter();
 
-  const handleCheckboxChange = (value: string, checked: boolean) => {
-    const currentValues = query[option] || [];
+  // const handleCheckboxChange = (value: string, checked: boolean) => {
+  //   const currentValues = query[option] || [];
 
-    if (checked) {
-      setQuery({
-        [option]: [...currentValues, value],
-      });
-    } else {
-      setQuery({
-        [option]: currentValues.filter((v) => v !== value),
-      });
-    }
-  };
+  //   if (checked) {
+  //     setQuery({
+  //       [option]: [...currentValues, value],
+  //     });
+  //   } else {
+  //     setQuery({
+  //       [option]: currentValues.filter((v) => v !== value),
+  //     });
+  //   }
+  // };
 
-  const isChecked = (value: string) => {
-    return (query[option] || []).includes(value);
-  };
+  // const isChecked = (value: string) => {
+  //   return (query[option] || []).includes(value);
+  // };
 
   return (
     <Collapsible defaultOpen>
@@ -58,10 +56,10 @@ export const FilterGroup = ({ option, values }: FilterGroupProps) => {
                 <Checkbox
                   id={`${option}-${value}`}
                   name={`${option}-${value}`}
-                  checked={isChecked(value)}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange(value, checked === true)
-                  }
+                  // checked={isChecked(value)}
+                  // onCheckedChange={(checked) =>
+                  //   handleCheckboxChange(value, checked === true)
+                  // }
                 />
                 <Label
                   className="font-light text-primary-gray text-sm leading-4.5 cursor-pointer"
