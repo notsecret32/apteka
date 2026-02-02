@@ -1,10 +1,11 @@
-import { sortOptionParser } from "@/lib/params";
 import { useQueryStates } from "nuqs";
+
+import { sortParamParser } from "@/lib/params";
 
 export const useSort = () => {
   return useQueryStates(
     {
-      sort: sortOptionParser.withDefault("relevance"),
+      sort: sortParamParser.withDefault("relevance"),
     },
     {
       history: "push",

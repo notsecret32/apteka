@@ -2,17 +2,19 @@ import { getProducts } from "@/api/products";
 import { Filters } from "@/components/filters";
 import { ProductList } from "@/components/product-list";
 import { Sort } from "@/components/sort";
+import { SearchParams } from "@/lib/types";
 
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<any>;
+  searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const products = await getProducts();
 
-  if (!products) {
-    return new Error("Произошла ошибка при попытке получить данные :(");
+  const { isError, filters, products } = await getProducts(params);
+
+  if (isError) {
+    return new Error();
   }
 
   return (
@@ -22,21 +24,9 @@ export default async function Home({
           <Sort />
         </div>
         <div className="grid w-full grid-cols-1 gap-4 xl:grid-cols-[270px_1fr]">
-          <Filters
-            filters={{
-              brand: [],
-              country: [],
-              dossage: [],
-              expirationDate: [],
-              isByPrescription: [],
-              manufacturer: [],
-              quantityPerPackage: [],
-              releaseForm: [],
-              storageTemperature: [],
-            }}
-          />
+          <Filters filters={filters} />
           <div className="max-xl:-mx-4">
-            <ProductList products={[]} />
+            <ProductList products={products} />
           </div>
         </div>
       </div>

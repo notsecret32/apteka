@@ -1,13 +1,34 @@
-import { Product } from "@/lib/types";
+import { Product, SearchParams } from "@/lib/types";
+import { filterProducts, getFilters, sortProducts } from "@/lib/utils";
 
-export async function getProducts(): Promise<Product[] | null> {
-  const data = await fetch("http://localhost:9080/api/products", {
+type GetProductsOptions = SearchParams;
+
+interface GetProductsReturn {
+  products: Product[];
+  filters: any;
+  pagination: any;
+  isError: boolean;
+}
+
+export async function getProducts(
+  params?: GetProductsOptions,
+): Promise<GetProductsReturn> {
+  const res = await fetch("http://localhost:9080/api/products", {
     cache: "force-cache",
   });
 
-  if (!data.ok) {
-    return null;
+  if (!res.ok) {
+    return { products: [], filters: [], pagination: {}, isError: true };
   }
 
-  return (await data.json()) as Product[];
+  let products: Product[] = await res.json();
+
+  const filters = getFilters(products);
+
+  if (params) {
+    products = filterProducts(products, params);
+    products = sortProducts(products, params.sort);
+  }
+
+  return { products, filters, pagination: {}, isError: false };
 }

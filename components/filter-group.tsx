@@ -3,6 +3,8 @@
 import { ChevronDown } from "lucide-react";
 
 import { filterLabels } from "@/constants/labels";
+import { FilterParamKey } from "@/lib/types";
+import { useFilters } from "@/hooks/use-filters";
 
 import {
   Collapsible,
@@ -15,36 +17,24 @@ import { FilterButton } from "./filter-button";
 import { Label } from "./ui/label";
 
 interface FilterGroupProps {
-  option: string;
+  param: FilterParamKey;
   values: string[];
 }
 
-export const FilterGroup = ({ option, values }: FilterGroupProps) => {
-  // const [query, setQuery] = useFilter();
+export const FilterGroup = ({ param, values }: FilterGroupProps) => {
+  const { filters, toggleFilter } = useFilters();
 
-  // const handleCheckboxChange = (value: string, checked: boolean) => {
-  //   const currentValues = query[option] || [];
+  const handleCheckboxChange = (value: string) => {
+    toggleFilter(param, value);
+  };
 
-  //   if (checked) {
-  //     setQuery({
-  //       [option]: [...currentValues, value],
-  //     });
-  //   } else {
-  //     setQuery({
-  //       [option]: currentValues.filter((v) => v !== value),
-  //     });
-  //   }
-  // };
-
-  // const isChecked = (value: string) => {
-  //   return (query[option] || []).includes(value);
-  // };
+  const isChecked = (value: string) => (filters[param] || []).includes(value);
 
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
         <FilterButton>
-          {filterLabels[option] ?? "Неизвестный параметр"}
+          {filterLabels[param] ?? "Неизвестный параметр"}
           <ChevronDown className="ml-auto group-data-[state=open]:rotate-180" />
         </FilterButton>
       </CollapsibleTrigger>
@@ -52,18 +42,16 @@ export const FilterGroup = ({ option, values }: FilterGroupProps) => {
         <FieldSet>
           <FieldGroup className="overflow-y-auto max-h-50 gap-3 mb-4">
             {values.map((value) => (
-              <Field key={`${option}-${value}`} orientation="horizontal">
+              <Field key={`${param}-${value}`} orientation="horizontal">
                 <Checkbox
-                  id={`${option}-${value}`}
-                  name={`${option}-${value}`}
-                  // checked={isChecked(value)}
-                  // onCheckedChange={(checked) =>
-                  //   handleCheckboxChange(value, checked === true)
-                  // }
+                  id={`${param}-${value}`}
+                  name={`${param}-${value}`}
+                  checked={isChecked(value)}
+                  onCheckedChange={() => handleCheckboxChange(value)}
                 />
                 <Label
                   className="font-light text-primary-gray text-sm leading-4.5 cursor-pointer"
-                  htmlFor={`${option}-${value}`}
+                  htmlFor={`${param}-${value}`}
                 >
                   {value}
                 </Label>

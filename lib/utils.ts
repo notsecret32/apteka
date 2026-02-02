@@ -2,22 +2,25 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import {
-  FilterKey,
-  FilterOptions,
+  Entries,
+  FilterParamKey,
+  FilterParams,
   Product,
   SearchParams,
-  SortOption,
+  SortParams,
 } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getFilters(products: Product[]): FilterOptions {
-  const filters = new Map<string, Set<string>>();
+export function getFilters(products: Product[]): Partial<FilterParams> {
+  const filters = new Map<FilterParamKey, Set<string>>();
 
   for (const product of products) {
-    for (const [key, value] of Object.entries(product.characteristics)) {
+    for (const [key, value] of Object.entries(
+      product.characteristics,
+    ) as Entries<typeof product.characteristics>) {
       if (!filters.has(key)) {
         filters.set(key, new Set());
       }
@@ -26,17 +29,17 @@ export function getFilters(products: Product[]): FilterOptions {
     }
   }
 
-  const result: Record<string, string[]> = {};
+  const result: Partial<FilterParams> = {};
   filters.forEach((values, key) => {
     result[key] = Array.from(values).sort();
   });
 
-  return result as FilterOptions;
+  return result;
 }
 
 export function sortProducts(
   products: Product[],
-  option: SortOption,
+  option: SortParams,
 ): Product[] {
   if (option === "price-asc") {
     return products.sort((a, b) => a.price - b.price);
@@ -53,36 +56,28 @@ export function filterProducts(
   products: Product[],
   filters: SearchParams,
 ): Product[] {
-  // Получаем только ключи фильтров (исключая 'sort')
-  const filterKeys = Object.keys(filters).filter(
-    (key) => key !== "sort",
-  ) as FilterKey[];
+  if (!filters || Object.keys(filters).length === 0) return products;
 
-  // Если нет фильтров (или только сортировка), возвращаем все товары
-  if (filterKeys.length === 0) {
-    return products;
-  }
+  const { sort: _, ...filterParams } = filters;
 
   return products.filter((product) => {
-    for (const filterKey of filterKeys) {
-      const filterValue = filters[filterKey];
+    const filterEntries = Object.entries(filterParams) as [
+      FilterParamKey,
+      string[],
+    ][];
 
-      if (!filterValue || filterValue.trim() === "") {
-        continue;
-      }
+    const activeFilters = filterEntries.filter(
+      ([_, values]) => values && values.length > 0,
+    );
 
-      const filterValues = filterValue.split(",").map((v) => v.trim());
-      const productValue = product.characteristics[filterKey];
+    if (activeFilters.length === 0) return true;
 
-      const hasMatch = filterValues.some((filterVal) =>
-        productValue.includes(filterVal),
-      );
+    return activeFilters.every(([param, filterValues]) => {
+      const productValue = product.characteristics[param];
 
-      if (!hasMatch) {
-        return false;
-      }
-    }
-
-    return true;
+      return Array.isArray(filterValues)
+        ? filterValues.some((filterValue) => filterValue === productValue)
+        : filterValues === productValue;
+    });
   });
 }
