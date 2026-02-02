@@ -1,11 +1,11 @@
-import { Product, SearchParams } from "@/lib/types";
+import { FilterParams, Product, SearchParams } from "@/lib/types";
 import { filterProducts, getFilters, sortProducts } from "@/lib/utils";
 
 type GetProductsOptions = SearchParams;
 
 interface GetProductsReturn {
   products: Product[];
-  filters: any;
+  filters: FilterParams;
   pagination: any;
   isError: boolean;
 }
@@ -18,7 +18,7 @@ export async function getProducts(
   });
 
   if (!res.ok) {
-    return { products: [], filters: [], pagination: {}, isError: true };
+    return { products: [], filters: {}, pagination: {}, isError: true };
   }
 
   let products: Product[] = await res.json();
