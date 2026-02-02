@@ -2,19 +2,15 @@ import { getProducts } from "@/api/products";
 import { Filters } from "@/components/filters";
 import { ProductList } from "@/components/product-list";
 import { Sort } from "@/components/sort";
-import { SortOption } from "@/lib/types";
-import { getFilters, sortProducts } from "@/lib/utils";
+import { SearchParams } from "@/lib/types";
+import { filterProducts, getFilters, sortProducts } from "@/lib/utils";
 
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{
-    sort: SortOption;
-    [key: string]: string | string[] | undefined;
-  }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-
   const products = await getProducts();
 
   if (!products) {
@@ -23,7 +19,8 @@ export default async function Home({
 
   const filters = getFilters(products);
 
-  const sortedProducts = sortProducts(products, params.sort);
+  const filteredProducts = filterProducts(products, params);
+  const sortedProducts = sortProducts(filteredProducts, params.sort);
 
   return (
     <main className="flex-1 xl:mb-8 mb-6 mt-4">

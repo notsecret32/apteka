@@ -27,3 +27,11 @@ export type Product = {
 export type FilterKey = keyof Characteristic;
 
 export type FilterOptions = Record<FilterKey, string[]>;
+
+export type FilterParams = {
+  [Key in FilterKey]: string;
+};
+
+export type SearchParams = {
+  sort: SortOption;
+} & FilterParams;

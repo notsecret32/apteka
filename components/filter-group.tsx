@@ -1,7 +1,10 @@
+"use client";
+
 import { ChevronDown } from "lucide-react";
 
 import { FilterKey } from "@/lib/types";
 import { filterLabels } from "@/constants/labels";
+import { useFilter } from "@/hooks/use-filter";
 
 import {
   Collapsible,
@@ -19,6 +22,26 @@ interface FilterGroupProps {
 }
 
 export const FilterGroup = ({ option, values }: FilterGroupProps) => {
+  const [query, setQuery] = useFilter();
+
+  const handleCheckboxChange = (value: string, checked: boolean) => {
+    const currentValues = query[option] || [];
+
+    if (checked) {
+      setQuery({
+        [option]: [...currentValues, value],
+      });
+    } else {
+      setQuery({
+        [option]: currentValues.filter((v) => v !== value),
+      });
+    }
+  };
+
+  const isChecked = (value: string) => {
+    return (query[option] || []).includes(value);
+  };
+
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
@@ -30,11 +53,15 @@ export const FilterGroup = ({ option, values }: FilterGroupProps) => {
       <CollapsibleContent>
         <FieldSet>
           <FieldGroup className="overflow-y-auto max-h-50 gap-3 mb-4">
-            {Array.from(values).map((value) => (
+            {values.map((value) => (
               <Field key={`${option}-${value}`} orientation="horizontal">
                 <Checkbox
                   id={`${option}-${value}`}
                   name={`${option}-${value}`}
+                  checked={isChecked(value)}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange(value, checked === true)
+                  }
                 />
                 <Label
                   className="font-light text-primary-gray text-sm leading-4.5 cursor-pointer"

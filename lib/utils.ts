@@ -1,6 +1,13 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { FilterOptions, Product, SortOption } from "./types";
+
+import {
+  FilterKey,
+  FilterOptions,
+  Product,
+  SearchParams,
+  SortOption,
+} from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -40,4 +47,42 @@ export function sortProducts(
   }
 
   return products;
+}
+
+export function filterProducts(
+  products: Product[],
+  filters: SearchParams,
+): Product[] {
+  // Получаем только ключи фильтров (исключая 'sort')
+  const filterKeys = Object.keys(filters).filter(
+    (key) => key !== "sort",
+  ) as FilterKey[];
+
+  // Если нет фильтров (или только сортировка), возвращаем все товары
+  if (filterKeys.length === 0) {
+    return products;
+  }
+
+  return products.filter((product) => {
+    for (const filterKey of filterKeys) {
+      const filterValue = filters[filterKey];
+
+      if (!filterValue || filterValue.trim() === "") {
+        continue;
+      }
+
+      const filterValues = filterValue.split(",").map((v) => v.trim());
+      const productValue = product.characteristics[filterKey];
+
+      const hasMatch = filterValues.some((filterVal) =>
+        productValue.includes(filterVal),
+      );
+
+      if (!hasMatch) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 }
