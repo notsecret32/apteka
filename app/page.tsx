@@ -1,6 +1,7 @@
 import { getProducts } from "@/api/products";
 import { Filters } from "@/components/filters";
 import { ProductList } from "@/components/product-list";
+import { ProductPagination } from "@/components/product-pagination";
 import { Sort } from "@/components/sort";
 import { SearchParams } from "@/lib/types";
 
@@ -11,7 +12,7 @@ export default async function Home({
 }) {
   const params = await searchParams;
 
-  const { isError, filters, products } = await getProducts(params);
+  const { isError, filters, products, pagination } = await getProducts(params);
 
   if (isError) {
     return new Error();
@@ -27,6 +28,7 @@ export default async function Home({
           <Filters filters={filters} />
           <div className="max-xl:-mx-4">
             <ProductList products={products} />
+            <ProductPagination {...pagination} />
           </div>
         </div>
       </div>

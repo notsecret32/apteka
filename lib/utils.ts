@@ -58,7 +58,7 @@ export function filterProducts(
 ): Product[] {
   if (!filters || Object.keys(filters).length === 0) return products;
 
-  const { sort: _, ...filterParams } = filters;
+  const { sort: _, page: __, ...filterParams } = filters;
 
   return products.filter((product) => {
     const filterEntries = Object.entries(filterParams) as [

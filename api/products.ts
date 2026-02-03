@@ -1,4 +1,5 @@
-import { FilterParams, Product, SearchParams } from "@/lib/types";
+import { ITEMS_PER_PAGE } from "@/constants/settings";
+import { FilterParams, Pagination, Product, SearchParams } from "@/lib/types";
 import { filterProducts, getFilters, sortProducts } from "@/lib/utils";
 
 type GetProductsOptions = SearchParams;
@@ -6,7 +7,7 @@ type GetProductsOptions = SearchParams;
 interface GetProductsReturn {
   products: Product[];
   filters: FilterParams;
-  pagination: any;
+  pagination: Pagination;
   isError: boolean;
 }
 
@@ -18,7 +19,18 @@ export async function getProducts(
   });
 
   if (!res.ok) {
-    return { products: [], filters: {}, pagination: {}, isError: true };
+    return {
+      products: [],
+      filters: {},
+      pagination: {
+        totalItems: 0,
+        totalPages: 0,
+        currentPage: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+      isError: true,
+    };
   }
 
   let products: Product[] = await res.json();
@@ -30,5 +42,23 @@ export async function getProducts(
     products = sortProducts(products, params.sort);
   }
 
-  return { products, filters, pagination: {}, isError: false };
+  const totalItems = products.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const currentPage = Math.max(1, Math.min(params?.page || 1, totalPages || 1));
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  products = products.slice(offset, offset + ITEMS_PER_PAGE);
+
+  return {
+    products,
+    filters,
+    pagination: {
+      totalItems,
+      totalPages,
+      currentPage,
+      hasNextPage: currentPage < totalPages,
+      hasPrevPage: currentPage > 1,
+    },
+    isError: false,
+  };
 }

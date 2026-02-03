@@ -28,8 +28,16 @@ export type SortParams = inferParserType<typeof sortParamParser>;
 
 export type FilterParams = Partial<Record<FilterParamKey, string[]>>;
 
-export type SearchParams = { sort: SortParams } & FilterParams;
+export type SearchParams = FilterParams & { sort: SortParams; page: number };
 
 export type Entries<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T][];
+
+export type Pagination = {
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};
